@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "brewingoverhaul:block/crucible_block" },
+    "facing=south": { "model": "brewingoverhaul:block/crucible_block", "y": 180 },
+    "facing=west":  { "model": "brewingoverhaul:block/crucible_block", "y": 270 },
+    "facing=east":  { "model": "brewingoverhaul:block/crucible_block", "y": 90 }
+  }
+}
