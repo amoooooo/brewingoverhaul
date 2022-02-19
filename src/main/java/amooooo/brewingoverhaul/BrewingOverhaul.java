@@ -1,9 +1,10 @@
 package amooooo.brewingoverhaul;
 
-import amooooo.brewingoverhaul.core.init.BlockInit;
-import amooooo.brewingoverhaul.core.init.ItemInit;
+import amooooo.brewingoverhaul.core.init.Registration;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -13,13 +14,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.stream.Collectors;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(BrewingOverhaul.MOD_ID)
@@ -28,14 +25,14 @@ public class BrewingOverhaul {
     // Directly reference a log4j logger.
     public static final Logger LOGGER = LogManager.getLogger();
     public static final String MOD_ID = "brewingoverhaul";
+    public static final ItemGroup BREWING_OVERHAUL_GROUP = new BrewingOverhaulGroup("brewingoverhaultab");
 
     public BrewingOverhaul() {
         // Register the setup method for modloading
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         bus.addListener(this::setup);
         // Register items
-        ItemInit.ITEMS.register(bus);
-        BlockInit.BLOCKS.register(bus);
+        Registration.register();
         // Register the enqueueIMC method for modloading
         bus.addListener(this::enqueueIMC);
         // Register the processIMC method for modloading
@@ -88,6 +85,16 @@ public class BrewingOverhaul {
         public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
             // register a new block here
             LOGGER.info("HELLO from Register Block");
+        }
+    }
+    public static class BrewingOverhaulGroup extends ItemGroup {
+        public BrewingOverhaulGroup(String label) {
+            super(label);
+        }
+
+        @Override
+        public ItemStack makeIcon() {
+            return Registration.EMPTY_VIAL.get().getDefaultInstance();
         }
     }
 }
