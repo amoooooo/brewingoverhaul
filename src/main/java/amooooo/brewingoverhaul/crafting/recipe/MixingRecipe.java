@@ -6,6 +6,8 @@ import com.google.gson.JsonParseException;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
@@ -16,6 +18,7 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 import javax.annotation.Nullable;
 
 public class MixingRecipe extends ShapelessRecipe {
+    private final String effect;
 /*
 public MixingRecipe(
                         ResourceLocation recipeId,
@@ -25,8 +28,9 @@ public MixingRecipe(
     }
 * */
 
-    public MixingRecipe(ResourceLocation recipeId, String group, ItemStack result, NonNullList<Ingredient> ingredients) {
+    public MixingRecipe(ResourceLocation recipeId, String group, ItemStack result, NonNullList<Ingredient> ingredients, String effect) {
         super(recipeId, null, result, ingredients);
+        this.effect = effect;
     }
 
     @Override
@@ -39,9 +43,13 @@ public MixingRecipe(
     public ItemStack assemble(CraftingInventory inv) {
         for(int i = 0; i < inv.getContainerSize() - 1; ++i){
             if (inv.getItem(i).hasTag() && inv.getItem(i).getTag().contains("mix")){
+                String currentMix = inv.getItem(i).getTag().getString("mix");
+                ItemStack modifiedInput = inv.getItem(i);
+                modifiedInput.getOrCreateTag().putString("mix2", currentMix);
+                return modifiedInput;
             }
         }
-        return super.assemble(inv);
+        return this.getResultItem().copy();
     }
 
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<MixingRecipe>{
@@ -49,6 +57,7 @@ public MixingRecipe(
         @Override
         public MixingRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
             ResourceLocation itemId = new ResourceLocation(JSONUtils.getAsString(json, "result"));
+            String effect = new String(JSONUtils.getAsString(json, "effect"));
             int count = JSONUtils.getAsInt(json, "count", 1);
             NonNullList<Ingredient> nonnulllist = itemsFromJson(JSONUtils.getAsJsonArray(json, "ingredients"));
             if(nonnulllist.isEmpty()){
@@ -57,7 +66,8 @@ public MixingRecipe(
                 throw new JsonParseException("Too many ingredients for shapeless recipe, the max is 12");
             } else {
                 ItemStack result = new ItemStack(ForgeRegistries.ITEMS.getValue(itemId), count);
-                return new MixingRecipe(recipeId, null, result, nonnulllist);
+                result.getOrCreateTag().putString("mix", effect);
+                return new MixingRecipe(recipeId, null, result, nonnulllist, effect);
             }
         }
         private static NonNullList<Ingredient> itemsFromJson(JsonArray p_199568_0_) {
@@ -83,12 +93,15 @@ public MixingRecipe(
                 nonNullList.set(j, Ingredient.fromNetwork(buffer));
             }
             ItemStack result = buffer.readItem();
-            return new MixingRecipe(recipeId, null, result, nonNullList);
+            // TODO: this doesnt work pls figure out how to send and receive the effect to and from the network properly and define it in the json
+            return new MixingRecipe(recipeId, null, result, nonNullList, );
         }
 
         @Override
         public void toNetwork(PacketBuffer buffer, MixingRecipe recipe) {
-            buffer.writeItem(recipe.getResultItem());
+            ItemStack result = recipe.getResultItem();
+            result.getOrCreateTag().putString("mix", recipe.effect);
+            buffer.writeItem(result);
             // TODO: doesnt work, figure out a way to have this work properly
             buffer.writeVarInt(recipe.getIngredients().size());
             for(Ingredient ingredient : recipe.getIngredients()) {
