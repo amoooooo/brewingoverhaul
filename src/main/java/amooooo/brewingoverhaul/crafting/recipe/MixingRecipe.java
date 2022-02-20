@@ -18,7 +18,6 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 import javax.annotation.Nullable;
 
 public class MixingRecipe extends ShapelessRecipe {
-    private final String effect;
 /*
 public MixingRecipe(
                         ResourceLocation recipeId,
@@ -28,9 +27,8 @@ public MixingRecipe(
     }
 * */
 
-    public MixingRecipe(ResourceLocation recipeId, String group, ItemStack result, NonNullList<Ingredient> ingredients, String effect) {
+    public MixingRecipe(ResourceLocation recipeId, String group, ItemStack result, NonNullList<Ingredient> ingredients) {
         super(recipeId, null, result, ingredients);
-        this.effect = effect;
     }
 
     @Override
@@ -45,7 +43,7 @@ public MixingRecipe(
             if (inv.getItem(i).hasTag() && inv.getItem(i).getTag().contains("mix")){
                 String currentMix = inv.getItem(i).getTag().getString("mix");
                 ItemStack modifiedInput = inv.getItem(i);
-                modifiedInput.getOrCreateTag().putString("mix2", currentMix);
+                modifiedInput.getOrCreateTag().putString("mix_2", currentMix);
                 return modifiedInput;
             }
         }
@@ -67,7 +65,7 @@ public MixingRecipe(
             } else {
                 ItemStack result = new ItemStack(ForgeRegistries.ITEMS.getValue(itemId), count);
                 result.getOrCreateTag().putString("mix", effect);
-                return new MixingRecipe(recipeId, null, result, nonnulllist, effect);
+                return new MixingRecipe(recipeId, null, result, nonnulllist);
             }
         }
         private static NonNullList<Ingredient> itemsFromJson(JsonArray p_199568_0_) {
@@ -93,15 +91,12 @@ public MixingRecipe(
                 nonNullList.set(j, Ingredient.fromNetwork(buffer));
             }
             ItemStack result = buffer.readItem();
-            // TODO: this doesnt work pls figure out how to send and receive the effect to and from the network properly and define it in the json
-            return new MixingRecipe(recipeId, null, result, nonNullList, );
+            return new MixingRecipe(recipeId, null, result, nonNullList);
         }
 
         @Override
         public void toNetwork(PacketBuffer buffer, MixingRecipe recipe) {
-            ItemStack result = recipe.getResultItem();
-            result.getOrCreateTag().putString("mix", recipe.effect);
-            buffer.writeItem(result);
+            buffer.writeItem(recipe.getResultItem());
             // TODO: doesnt work, figure out a way to have this work properly
             buffer.writeVarInt(recipe.getIngredients().size());
             for(Ingredient ingredient : recipe.getIngredients()) {
