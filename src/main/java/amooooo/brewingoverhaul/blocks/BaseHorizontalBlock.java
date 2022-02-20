@@ -1,4 +1,4 @@
-package amooooo.brewingoverhaul.common.blocks;
+package amooooo.brewingoverhaul.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

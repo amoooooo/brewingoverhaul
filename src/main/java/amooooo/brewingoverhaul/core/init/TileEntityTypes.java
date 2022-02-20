@@ -1,7 +1,6 @@
 package amooooo.brewingoverhaul.core.init;
 
-import amooooo.brewingoverhaul.common.blocks.crucible.CrucibleTileEntity;
-import amooooo.brewingoverhaul.core.init.Registration;
+import amooooo.brewingoverhaul.blocks.crucible.CrucibleTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;

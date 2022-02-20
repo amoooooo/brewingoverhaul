@@ -1,4 +1,4 @@
-package amooooo.brewingoverhaul.common.blocks.crucible;
+package amooooo.brewingoverhaul.blocks.crucible;
 
 import amooooo.brewingoverhaul.core.init.TileEntityTypes;
 import net.minecraft.entity.player.PlayerEntity;

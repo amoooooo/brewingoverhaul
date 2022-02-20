@@ -1,6 +1,6 @@
-package amooooo.brewingoverhaul.common.blocks.crucible;
+package amooooo.brewingoverhaul.blocks.crucible;
 
-import amooooo.brewingoverhaul.common.blocks.BaseHorizontalBlock;
+import amooooo.brewingoverhaul.blocks.BaseHorizontalBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;

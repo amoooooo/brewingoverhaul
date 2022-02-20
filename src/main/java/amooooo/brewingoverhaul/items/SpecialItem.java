@@ -1,7 +1,5 @@
-package amooooo.brewingoverhaul.core.items;
+package amooooo.brewingoverhaul.items;
 
-import com.sun.org.apache.xpath.internal.operations.String;
-import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.client.util.InputMappings;
@@ -35,7 +33,7 @@ public class SpecialItem extends Item {
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        if (InputMappings.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_KEY_LEFT_SHIFT)){
+        if (InputMappings.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_KEY_LEFT_SHIFT)) {
             tooltip.add(new StringTextComponent("Advanced Tooltip"));
         } else {
             tooltip.add(new TranslationTextComponent("tooltip.special_item.test"));

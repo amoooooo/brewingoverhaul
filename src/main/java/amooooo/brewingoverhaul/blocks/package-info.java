@@ -1,7 +1,7 @@
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 
-package amooooo.brewingoverhaul.common.blocks;
+package amooooo.brewingoverhaul.blocks;
 
 import mcp.MethodsReturnNonnullByDefault;
 

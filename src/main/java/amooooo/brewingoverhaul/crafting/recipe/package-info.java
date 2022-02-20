@@ -1,0 +1,1 @@
+package amooooo.brewingoverhaul.crafting.recipe;

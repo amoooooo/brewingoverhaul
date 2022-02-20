@@ -1,18 +1,15 @@
-package amooooo.brewingoverhaul.common.crafting.recipe;
+package amooooo.brewingoverhaul.crafting.recipe;
 
-import amooooo.brewingoverhaul.core.init.Recipes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
@@ -39,8 +36,12 @@ public MixingRecipe(
 
     //TODO: nbt matching logic here
     @Override
-    public ItemStack assemble(CraftingInventory p_77572_1_) {
-        return super.assemble(p_77572_1_);
+    public ItemStack assemble(CraftingInventory inv) {
+        for(int i = 0; i < inv.getContainerSize() - 1; ++i){
+            if (inv.getItem(i).hasTag() && inv.getItem(i).getTag().contains("mix")){
+            }
+        }
+        return super.assemble(inv);
     }
 
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<MixingRecipe>{

@@ -1,13 +1,10 @@
 package amooooo.brewingoverhaul.core.init;
 
 import amooooo.brewingoverhaul.BrewingOverhaul;
-import amooooo.brewingoverhaul.common.crafting.recipe.MixingRecipe;
-import net.minecraft.item.crafting.IRecipe;
+import amooooo.brewingoverhaul.crafting.recipe.MixingRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraftforge.fml.RegistryObject;
-
-import java.util.function.Supplier;
 
 public class Recipes {
     public static class Types {

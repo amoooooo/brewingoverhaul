@@ -1,9 +1,9 @@
 package amooooo.brewingoverhaul.core.init;
 
 import amooooo.brewingoverhaul.BrewingOverhaul;
-import amooooo.brewingoverhaul.common.blocks.crucible.CrucibleBlock;
-import amooooo.brewingoverhaul.common.items.ConcoctionItem;
-import amooooo.brewingoverhaul.core.items.SpecialItem;
+import amooooo.brewingoverhaul.blocks.crucible.CrucibleBlock;
+import amooooo.brewingoverhaul.items.ConcoctionItem;
+import amooooo.brewingoverhaul.items.SpecialItem;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;

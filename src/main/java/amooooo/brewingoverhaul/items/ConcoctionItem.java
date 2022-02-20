@@ -1,4 +1,4 @@
-package amooooo.brewingoverhaul.common.items;
+package amooooo.brewingoverhaul.items;
 
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
