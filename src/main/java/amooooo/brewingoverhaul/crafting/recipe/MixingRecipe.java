@@ -18,22 +18,20 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 import javax.annotation.Nullable;
 
 public class MixingRecipe extends ShapelessRecipe {
-/*
-public MixingRecipe(
-                        ResourceLocation recipeId,
-                        NonNullList<Ingredient> ingredient,
-                        ItemStack result) {
-        super(Recipes.Types.MIXING, Recipes.Serializers.MIXING.get(), recipeId, "", Ingredient.merge(ingredient), result);
-    }
-* */
 
-    public MixingRecipe(ResourceLocation recipeId, String group, ItemStack result, NonNullList<Ingredient> ingredients) {
+    protected final String effect;
+
+    public MixingRecipe(ResourceLocation recipeId, String group, ItemStack result, NonNullList<Ingredient> ingredients, String effect) {
         super(recipeId, null, result, ingredients);
+        this.effect = effect;
     }
 
     @Override
     public boolean isSpecial() {
         return true;
+    }
+    public String getEffect(){
+        return this.effect;
     }
 
     //TODO: nbt matching logic here
@@ -42,12 +40,15 @@ public MixingRecipe(
         for(int i = 0; i < inv.getContainerSize() - 1; ++i){
             if (inv.getItem(i).hasTag() && inv.getItem(i).getTag().contains("mix")){
                 String currentMix = inv.getItem(i).getTag().getString("mix");
-                ItemStack modifiedInput = inv.getItem(i);
-                modifiedInput.getOrCreateTag().putString("mix_2", currentMix);
-                return modifiedInput;
+                ItemStack modifiedOutput = this.getResultItem();
+                modifiedOutput.getOrCreateTag().putString("mix", this.effect);
+                modifiedOutput.getOrCreateTag().putString("mix_2", currentMix);
+                return modifiedOutput.copy();
             }
         }
-        return this.getResultItem().copy();
+        ItemStack output = this.getResultItem();
+        output.getOrCreateTag().putString("mix", this.effect);
+        return output.copy();
     }
 
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<MixingRecipe>{
@@ -65,7 +66,7 @@ public MixingRecipe(
             } else {
                 ItemStack result = new ItemStack(ForgeRegistries.ITEMS.getValue(itemId), count);
                 result.getOrCreateTag().putString("mix", effect);
-                return new MixingRecipe(recipeId, null, result, nonnulllist);
+                return new MixingRecipe(recipeId, null, result, nonnulllist, effect);
             }
         }
         private static NonNullList<Ingredient> itemsFromJson(JsonArray p_199568_0_) {
@@ -84,29 +85,25 @@ public MixingRecipe(
         @Nullable
         @Override
         public MixingRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
-            Ingredient ingredient = Ingredient.fromNetwork(buffer);
             int i = buffer.readVarInt();
+            String effect = buffer.readUtf().toString();
             NonNullList<Ingredient> nonNullList = NonNullList.withSize(i, Ingredient.EMPTY);
             for(int j = 0; j < nonNullList.size(); ++j) {
                 nonNullList.set(j, Ingredient.fromNetwork(buffer));
             }
             ItemStack result = buffer.readItem();
-            return new MixingRecipe(recipeId, null, result, nonNullList);
+            return new MixingRecipe(recipeId, null, result, nonNullList, effect);
         }
 
         @Override
         public void toNetwork(PacketBuffer buffer, MixingRecipe recipe) {
             buffer.writeItem(recipe.getResultItem());
+            buffer.writeUtf(recipe.getEffect());
             // TODO: doesnt work, figure out a way to have this work properly
             buffer.writeVarInt(recipe.getIngredients().size());
             for(Ingredient ingredient : recipe.getIngredients()) {
                 ingredient.toNetwork(buffer);
             }
-            /* use this to read all ingredients
-            buffer.writeByte(numberOfIngredients);
-            for (int i = 0; i < numberOfIngredients; ++i){
-                buffer.write(...);
-            }*/
         }
     }
 }
