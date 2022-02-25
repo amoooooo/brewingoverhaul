@@ -17,6 +17,7 @@ import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.LockableTileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
@@ -272,6 +273,34 @@ public class CrucibleTileEntity extends LockableTileEntity implements ISidedInve
 
         for (LazyOptional<? extends IItemHandler> handler : this.handlers) {
             handler.invalidate();;
+        }
+    }
+
+    public boolean isFull() {
+        int count = 0;
+        for (int i = 0; i < 6; i++) {
+            if (!getItem(i).isEmpty()) {
+                count++;
+            }
+        }
+        return count == 6;
+    }
+
+    public void addItem(ItemStack stack) {
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i).isEmpty()) {
+                setItem(i, stack);
+            }
+        }
+    }
+
+    public void takeItem(PlayerEntity player) {
+        for (int i = 5; i > 0; --i){
+            if (!items.get(i).isEmpty()) {
+                System.out.println("Empty!");
+                player.setItemInHand(Hand.MAIN_HAND, items.get(i));
+                removeItem(i, 1);
+            }
         }
     }
 }

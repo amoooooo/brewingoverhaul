@@ -7,6 +7,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -18,7 +19,6 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
@@ -65,7 +65,13 @@ public class CrucibleBlock extends BaseHorizontalBlock {
         TileEntity tileEntity = world.getBlockEntity(pos);
         if (tileEntity instanceof CrucibleTileEntity && player instanceof ServerPlayerEntity) {
             CrucibleTileEntity te = (CrucibleTileEntity) tileEntity;
-            NetworkHooks.openGui((ServerPlayerEntity) player, te, te::encodeExtraData);
+            ItemStack stack = player.getItemInHand(Hand.MAIN_HAND);
+            if(player.getItemInHand(Hand.MAIN_HAND) == ItemStack.EMPTY) {
+                te.takeItem(player);
+            } else if(!te.isFull()) {
+                te.addItem(new ItemStack(stack.getItem(), 1));
+                player.getItemInHand(Hand.MAIN_HAND).shrink(1);
+            }
         }
     }
 
